@@ -31,7 +31,7 @@ It focuses on turn-based logic, score validation, and a clean, modular architect
 
 ## 📸 Screenshots
 
-![Generala UI](./public/screenshots/generala.png)
+![Generala UI](./frontend/public/screenshots/generala.png)
 *Main gameplay interface with dice roll and score tracking*
 
 ---
