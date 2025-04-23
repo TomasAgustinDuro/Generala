@@ -31,3 +31,15 @@
   background-color: black;
   border-radius: 100%;
 }
+
+@media (max-width: 992px) {
+  .dado{
+    width: 30px;
+    height: 30px
+  }
+
+  .punto {
+    width: 5px;
+    height: 5px;
+  }
+}

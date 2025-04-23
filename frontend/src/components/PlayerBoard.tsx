@@ -37,18 +37,16 @@ function PlayerBoard({
     reiniciar();
   };
 
-
   return (
-    <div>
+    <div className={styles.board}>
+      <h3
+        style={{
+          backgroundColor: turn === jugadorActual ? "green" : "transparent",
+        }}
+      >
+        Jugador
+      </h3>
       <div className={styles.containerBoard}>
-        <h3
-          style={{
-            backgroundColor:
-              turn === jugadorActual ? "green" : "transparent",
-          }}
-        >
-          Jugador
-        </h3>
         {todasJugadas.map((jugada) => {
           const jugadaHecha = tablero[jugada] !== null;
           const disponible = !jugadaHecha && jugadas.includes(jugada);
@@ -75,13 +73,13 @@ function PlayerBoard({
                 handleSelectCasillero(disponible, jugada, puntos);
               }}
             >
-              <strong>{jugada}:</strong>{" "}
-              {disponible ? puntos ?? "-" : tablero[jugada] ?? "--"}
+              <strong>{jugada[0].toUpperCase()}:</strong>{" "}
+              {disponible ? puntos ?? "-" : tablero[jugada] ?? "-"}
             </p>
           );
         })}
-        <p className={styles.total}>Total: {total(tablero)}</p>
       </div>
+      <p className={styles.total}>Total: {total(tablero)}</p>
       {jugadorActual != "pc" && (
         <button
           onClick={() => handlePlay()}
