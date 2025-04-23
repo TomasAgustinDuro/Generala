@@ -10,7 +10,10 @@ function Menu() {
       <div className={styles.containerOptions}>
         <Link to="Pc" className={styles.button}>vs PC</Link>
         <Link to="Jugador" className={styles.button}>vs Jugador</Link>
-        {/* <button>Anotador</button> */}
+      </div>
+
+      <div className={styles.disclaimer}>
+        <strong><p>Si estas en celular al ingresar a un modo de juego gira la pantalla</p></strong>
       </div>
     </div>
   );

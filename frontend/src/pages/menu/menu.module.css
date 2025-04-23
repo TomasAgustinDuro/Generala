@@ -26,7 +26,27 @@
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 .button:hover {
-    background-color: #ff6f00; /* Naranja */
-    transform: scale(1.05); /* Efecto de agrandar un poco el botón */
-    border-color: #ff6f00; /* Cambia el borde a naranja también */
+  background-color: #ff6f00; /* Naranja */
+  transform: scale(1.05); /* Efecto de agrandar un poco el botón */
+  border-color: #ff6f00; /* Cambia el borde a naranja también */
+}
+
+.disclaimer {
+  background-color: #ff6f00;
+  border-radius: 10px;
+  padding: .5em;
+  color: black;
+  margin: 1em auto;
+  width: 50%;
+
+}
+
+@media (max-width: 992px) {
+  .containerMenu img {
+    width: 100%;
   }
+
+  .disclaimer{
+    width: 75%;
+  }
+}
