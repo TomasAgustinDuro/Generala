@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import styles from "./prueba.module.css";
+import styles from "./game.module.css";
 import { handlePlay, handleSave, handleRemove } from "../logic/player.js";
 import { todasJugadas } from "../constants/juego.js";
 import {
@@ -15,7 +15,7 @@ import PcBoard from "../components/PcBoard.js";
 import { EstadoJugador } from "../utils/types.js";
 import Dado from "../components/Dados.tsx";
 
-function Prueba() {
+function Pc() {
   const [estadoJugador, setEstadoJugador] = useState<EstadoJugador>({
     dados: [],
     dadosGuardados: [],
@@ -24,7 +24,7 @@ function Prueba() {
     jugadas: [],
   });
 
-  const [turn, setTurn] = useState<"jugador" | "pc">("jugador");
+  const [turn, setTurn] = useState<"jugador1" | "jugador2">("jugador1");
   const [TableroJugador, setTableroJugador] = useState(crearTableroInicial);
   const [TableroJugadorPc, setTableroJugadorPc] = useState(crearTableroInicial);
 
@@ -33,7 +33,7 @@ function Prueba() {
   }, [TableroJugador, TableroJugadorPc]);
 
   useEffect(() => {
-    if (turn === "pc") {
+    if (turn === "jugador2") {
       setTimeout(() => {
         cpuPlayer({
           tablero: TableroJugadorPc,
@@ -47,7 +47,7 @@ function Prueba() {
   return (
     <div className={styles.gameContainer}>
       <PlayerBoard
-        jugadorActual="jugador"
+        jugadorActual="jugador1"
         todasJugadas={todasJugadas}
         calcularPuntos={calcularPuntos}
         jugadas={estadoJugador.jugadas}
@@ -119,4 +119,4 @@ function Prueba() {
     </div>
   );
 }
-export default Prueba;
+export default Pc;

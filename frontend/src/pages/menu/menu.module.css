@@ -1,0 +1,32 @@
+.containerMenu {
+  width: 75%;
+  margin: auto;
+  text-align: center;
+}
+
+.containerOptions {
+  display: flex;
+  gap: 1em;
+  text-align: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.button {
+  background-color: #333;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  list-style: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid #444;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.button:hover {
+    background-color: #ff6f00; /* Naranja */
+    transform: scale(1.05); /* Efecto de agrandar un poco el botón */
+    border-color: #ff6f00; /* Cambia el borde a naranja también */
+  }

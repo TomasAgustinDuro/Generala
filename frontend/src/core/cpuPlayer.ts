@@ -86,7 +86,7 @@ export const cpuPlayer = ({ tablero, setTablero, setTurn }: PlayPcProps) => {
     [mejor]: puntosFinales === null ? 0 : puntosFinales,
   }));
 
-  return setTurn('jugador')
+  return setTurn('jugador1')
 
 };
 

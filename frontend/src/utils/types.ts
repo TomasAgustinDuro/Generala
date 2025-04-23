@@ -24,7 +24,7 @@ export type HandleRemoveProps = {
 
 export type ReiniciarTurnoPlayerProps = {
   setEstado: React.Dispatch<React.SetStateAction<EstadoJugador>>;
-  setTurn: React.Dispatch<React.SetStateAction<"jugador" | "pc">>;
+  setTurn: React.Dispatch<React.SetStateAction<"jugador1" | "jugador2">>;
 };
 
 export type PcBoardProps = {
@@ -64,6 +64,6 @@ export type PlayPcProps = {
     React.SetStateAction<Record<string, number | null>>
   >;
   setTurn: React.Dispatch<
-    React.SetStateAction<"jugador" | "pc">
+    React.SetStateAction<"jugador1" | "jugador2">
   >;
 };
