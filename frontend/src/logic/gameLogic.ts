@@ -72,5 +72,5 @@ export const reiniciarTurnoPlayer = ({
     fueServida: false,
     jugadas: [],
   });
-  setTurn((prevTurn) => (prevTurn === "jugador1" ? "jugador2" : "jugador1"))
+  setTurn((prevTurn) => (prevTurn === "jugador1" ? "jugador2" : "jugador1"));
 };
