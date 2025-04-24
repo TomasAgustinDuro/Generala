@@ -1,15 +1,14 @@
 import "./App.css";
-import { StrictMode } from "react";
-import Pc from "./pages/Pc";
-import Menu from "./pages/menu/menu";
-import MultijugadorLocal from "./pages/multijugadorLocal";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { StrictMode } from "react";
+import Pc from "./pages/Pc.tsx";
+import Menu from "./pages/menu/menu.tsx";
+import MultijugadorLocal from "./pages/multijugadorLocal.tsx";
 
 function App() {
   return (
     <StrictMode>
       <BrowserRouter>
-        {" "}
         <Routes>
           <Route path="/" element={<Menu />} />
           <Route path="Pc" element={<Pc />} />
