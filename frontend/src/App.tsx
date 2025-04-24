@@ -2,8 +2,8 @@ import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { StrictMode } from "react";
 import Pc from "./pages/Pc.tsx";
-import Menu from "./pages/menu/menu.tsx";
-import MultijugadorLocal from "./pages/multijugadorLocal.tsx";
+import Menu from "./pages/menu/Menu.tsx";
+import MultijugadorLocal from "./pages/MultijugadorLocal.tsx";
 
 function App() {
   return (
