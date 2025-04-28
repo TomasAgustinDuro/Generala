@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { calcularPuntos, calcularTotal, juegoFinalizado } from "./gameLogic";
 
 describe("calcularPuntos", () => {
@@ -97,24 +98,37 @@ describe("calcularTotal", () => {
 
 describe("juegoFinalizado", () => {
   it("Gana el jugador nro 1", () => {
-    const resultado = juegoFinalizado(
-      {
-        "1": 1,
+    const resultado = juegoFinalizado({
+      "1": {
+        1: 1,
+        2: 1,
+        3: 1,
       },
-      {
-        "1": 0,
-      }
-    );
+      "2": {
+        1: 0,
+        2: 0,
+        3: 0,
+      },
+    });
+
+    // Ahora hacés un expect:
+    expect(resultado).toEqual("Gana el jugador 1");
   });
 
   it("Gana el jugador nro 2", () => {
-    const resultado = juegoFinalizado(
-      {
-        "1": 0,
+    const resultado = juegoFinalizado({
+      "1": {
+        1: 0,
+        2: 0,
+        3: 0,
       },
-      {
-        "1": 1,
-      }
-    );
+      "2": {
+        1: 1,
+        2: 1,
+        3: 1,
+      },
+    });
+
+    expect(resultado).toBe("1");
   });
 });

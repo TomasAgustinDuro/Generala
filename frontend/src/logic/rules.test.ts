@@ -1,4 +1,4 @@
-import { expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { posiblesJugadas } from "./rules";
 
 describe("posiblesJugadas", () => {
