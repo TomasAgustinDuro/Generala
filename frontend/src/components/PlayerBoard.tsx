@@ -1,5 +1,5 @@
 import styles from "./board.module.css";
-import { PlayerBoardProps } from "../utils/types";
+import { PlayerBoardProps, Tablero } from "../utils/types";
 
 function PlayerBoard({
   jugadorActual,
@@ -23,17 +23,21 @@ function PlayerBoard({
     puntos: number | null
   ) => {
     if (tablero[jugada] !== null) return;
+
     if (!disponible) {
-      setTablero((prev) => ({
-        ...prev,
+      const newTablero: Tablero = {
+        ...tablero,
         [jugada]: 0,
-      }));
+      };
+      setTablero(newTablero);
     } else {
-      setTablero((prev) => ({
-        ...prev,
+      const newTablero: Tablero = {
+        ...tablero,
         [jugada]: puntos,
-      }));
+      };
+      setTablero(newTablero);
     }
+
     reiniciar();
   };
 
@@ -44,7 +48,7 @@ function PlayerBoard({
           backgroundColor: turn === jugadorActual ? "green" : "transparent",
         }}
       >
-        Jugador
+        Jugador {jugadorActual}
       </h3>
       <div className={styles.containerBoard}>
         {todasJugadas.map((jugada) => {

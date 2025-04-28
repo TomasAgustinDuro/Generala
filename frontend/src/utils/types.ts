@@ -24,7 +24,7 @@ export type HandleRemoveProps = {
 
 export type ReiniciarTurnoPlayerProps = {
   setEstado: React.Dispatch<React.SetStateAction<EstadoJugador>>;
-  setTurn: React.Dispatch<React.SetStateAction<"jugador1" | "jugador2">>;
+  nextTurn: () => string;
 };
 
 export type PcBoardProps = {
@@ -34,6 +34,15 @@ export type PcBoardProps = {
   total: (tablero: Record<string, number | null>) => number;
 };
 
+export type Player = {
+  id: string;
+};
+
+export type Tablero = {
+  [key: string]: number | null;
+};
+export type Tableros = Record<string, Tablero>;
+
 export type PlayerBoardProps = {
   todasJugadas: string[];
   jugadas: string[];
@@ -42,9 +51,7 @@ export type PlayerBoardProps = {
   turn: string;
   tablero: Record<string, number | null>;
   reiniciar: () => void;
-  setTablero: React.Dispatch<
-    React.SetStateAction<Record<string, number | null>>
-  >;
+  setTablero: (nuevoTablero: Tablero) => void;
   calcularPuntos: (
     jugada: string,
     dados: number[],
@@ -60,10 +67,6 @@ export type PlayerBoardProps = {
 
 export type PlayPcProps = {
   tablero: Record<string, number | null>;
-  setTablero: React.Dispatch<
-    React.SetStateAction<Record<string, number | null>>
-  >;
-  setTurn: React.Dispatch<
-    React.SetStateAction<"jugador1" | "jugador2">
-  >;
+  setTablero: (nuevoTablero: Tablero) => void;
+  nextTurn: () => string;
 };

@@ -9,13 +9,15 @@
   gap: 1em;
   text-align: center;
   justify-content: center;
-  padding: 1em;
+  padding: 2em;
 }
 
 .playerSelection {
-  border: solid 1px red;
   display: flex;
-  flex-direction: column;
+}
+
+.playerButtons > * {
+  margin: 1em;
 }
 
 .button {

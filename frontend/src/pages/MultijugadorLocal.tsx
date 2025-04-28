@@ -8,81 +8,141 @@ import {
   calcularPuntos,
   reiniciarTurnoPlayer,
 } from "../logic/gameLogic.js";
-import { crearTableroInicial } from "../logic/boards.js";
 import PlayerBoard from "../components/PlayerBoard.js";
-import { EstadoJugador } from "../utils/types.js";
 import Dado from "../components/Dados.tsx";
+import {
+  createInitialBoards,
+  createInitialStatesPlayers,
+} from "../utils/setupPlayers.ts";
+import { Tablero } from "../utils/types.ts";
+import { useParams } from "react-router-dom";
 
 function MultijugadorLocal() {
-  const [estadoJugador1, setEstadoJugador1] = useState<EstadoJugador>({
-    dados: [],
-    dadosGuardados: [],
-    tiradasRestantes: 3,
-    fueServida: false,
-    jugadas: [],
-  });
+  const { quantity } = useParams();
 
-  const [estadoJugador2, setEstadoJugador2] = useState<EstadoJugador>({
-    dados: [],
-    dadosGuardados: [],
-    tiradasRestantes: 3,
-    fueServida: false,
-    jugadas: [],
-  });
+  // Convert to number and use a default if invalid
+  const playerCount = parseInt(quantity || "2", 10);
+  const [statePlayers, setStatePlayers] = useState(
+    createInitialStatesPlayers(playerCount)
+  );
+  const [tableros, setTableros] = useState<Record<string, Tablero>>(
+    createInitialBoards(playerCount)
+  );
+  const [jugadorActual, setJugadorActual] = useState("1");
 
-  const [turn, setTurn] = useState<"jugador1" | "jugador2">("jugador1");
-  const [TableroJugador1, setTableroJugador1] = useState(crearTableroInicial);
-  const [TableroJugador2, setTableroJugador2] = useState(crearTableroInicial);
+  const [turn, setTurn] = useState<string>("1");
 
   useEffect(() => {
-    juegoFinalizado(TableroJugador1, TableroJugador2);
-  }, [TableroJugador1, TableroJugador2]);
+    const entry = Object.entries(statePlayers).find(([id, _]) => id === turn);
+    if (entry) {
+      const [playerId, _] = entry;
+      setJugadorActual(playerId);
+    }
+  }, [turn]);
 
-  const estadoActual = turn === "jugador1" ? estadoJugador1 : estadoJugador2;
-  const setEstadoActual =
-  turn === "jugador1" ? setEstadoJugador1 : setEstadoJugador2;
+  useEffect(() => {
+    juegoFinalizado(tableros);
+  }, [tableros]);
+
+  const nextTurn = (): string => {
+    const currentId = parseInt(turn);
+    const siguiente = ((currentId % playerCount) + 1).toString();
+    setTurn(siguiente);
+    return siguiente;
+  };
 
   return (
     <div className={styles.gameContainer}>
-      <PlayerBoard
-        jugadorActual="jugador1"
-        todasJugadas={todasJugadas}
-        calcularPuntos={calcularPuntos}
-        jugadas={estadoJugador1.jugadas}
-        setTablero={setTableroJugador1}
-        handlePlay={() =>
-          handlePlay({
-            estado: estadoJugador1,
-            setEstado: setEstadoJugador1,
-            tablero: TableroJugador1,
-          })
-        }
-        tiradasRestantes={estadoJugador1.tiradasRestantes}
-        tablero={TableroJugador1}
-        dadosGuardados={estadoJugador1.dadosGuardados}
-        dados={estadoJugador1.dados}
-        fueServida={estadoJugador1.fueServida}
-        turn={turn}
-        reiniciar={() =>
-          reiniciarTurnoPlayer({
-            setEstado: setEstadoJugador1,
-            setTurn,
-          })
-        }
-        total={calcularTotal}
-      />
+      {Object.entries(statePlayers).map(([id, estado]) => (
+        <PlayerBoard
+          jugadorActual={id}
+          todasJugadas={todasJugadas}
+          calcularPuntos={calcularPuntos}
+          jugadas={estado.jugadas}
+          setTablero={(nuevoTablero) =>
+            setTableros((prev) => ({
+              ...prev,
+              [id]: nuevoTablero,
+            }))
+          }
+          handlePlay={() =>
+            handlePlay({
+              estado: estado,
+              setEstado: (newEstadoOrFunction) => {
+                setStatePlayers((prevState) => {
+                  // Handle both cases: direct value or updater function
+                  const finalNewEstado =
+                    typeof newEstadoOrFunction === "function"
+                      ? newEstadoOrFunction(prevState[id])
+                      : newEstadoOrFunction;
+
+                  return {
+                    ...prevState,
+                    [id]: finalNewEstado,
+                  };
+                });
+              },
+              tablero: tableros[id],
+            })
+          }
+          tiradasRestantes={estado.tiradasRestantes}
+          tablero={tableros[id]}
+          dadosGuardados={estado.dadosGuardados}
+          dados={estado.dados}
+          fueServida={estado.fueServida}
+          turn={turn}
+          reiniciar={() =>
+            reiniciarTurnoPlayer({
+              setEstado: (newEstadoOrFunction) => {
+                setStatePlayers((prevState) => {
+                  // Handle both cases: direct value or updater function
+                  const finalNewEstado =
+                    typeof newEstadoOrFunction === "function"
+                      ? newEstadoOrFunction(prevState[id])
+                      : newEstadoOrFunction;
+
+                  return {
+                    ...prevState,
+                    [id]: finalNewEstado,
+                  };
+                });
+              },
+              nextTurn: () => nextTurn(),
+            })
+          }
+          total={calcularTotal}
+        />
+      ))}
 
       <div className={styles.firstPart}>
-        <div>{<p>Tiradas restantes: {estadoActual.tiradasRestantes}</p>}</div>
+        <div>
+          {
+            <p>
+              Tiradas restantes: {statePlayers[jugadorActual].tiradasRestantes}
+            </p>
+          }
+        </div>
         <div className={styles.dadosContainer}>
           <div>
-            {estadoActual.dados.map((num, index) => (
+            {statePlayers[jugadorActual].dados.map((num, index) => (
               <button
                 key={index}
                 onClick={() =>
                   handleSave(index, {
-                    estado: estadoActual,
-                    setEstado: setEstadoActual,
+                    estado: statePlayers[jugadorActual],
+                    setEstado: (newEstadoOrFunction) => {
+                      setStatePlayers((prevState) => {
+                        const finalNewEstado =
+                          typeof newEstadoOrFunction === "function"
+                            ? newEstadoOrFunction(prevState[jugadorActual])
+                            : newEstadoOrFunction;
+
+                        return {
+                          ...prevState,
+                          [jugadorActual]: finalNewEstado,
+                        };
+                      });
+                    },
                   })
                 }
               >
@@ -91,13 +151,25 @@ function MultijugadorLocal() {
             ))}
           </div>
           <div className={styles.dadosGuardadosContainer}>
-            {estadoActual.dadosGuardados.map((num, index) => (
+            {statePlayers[jugadorActual].dadosGuardados.map((num, index) => (
               <button
                 key={index}
                 onClick={() =>
                   handleRemove(index, {
-                    estado: estadoActual,
-                    setEstado: setEstadoActual,
+                    estado: statePlayers[jugadorActual],
+                    setEstado: (newEstadoOrFunction) => {
+                      setStatePlayers((prevState) => {
+                        const finalNewEstado =
+                          typeof newEstadoOrFunction === "function"
+                            ? newEstadoOrFunction(prevState[jugadorActual])
+                            : newEstadoOrFunction;
+
+                        return {
+                          ...prevState,
+                          [jugadorActual]: finalNewEstado,
+                        };
+                      });
+                    },
                   })
                 }
               >
@@ -107,33 +179,6 @@ function MultijugadorLocal() {
           </div>
         </div>
       </div>
-      <PlayerBoard
-        jugadorActual="jugador2"
-        todasJugadas={todasJugadas}
-        calcularPuntos={calcularPuntos}
-        jugadas={estadoJugador2.jugadas}
-        setTablero={setTableroJugador2}
-        handlePlay={() =>
-          handlePlay({
-            estado: estadoJugador2,
-            setEstado: setEstadoJugador2,
-            tablero: TableroJugador2,
-          })
-        }
-        tiradasRestantes={estadoJugador2.tiradasRestantes}
-        tablero={TableroJugador2}
-        dadosGuardados={estadoJugador2.dadosGuardados}
-        dados={estadoJugador2.dados}
-        fueServida={estadoJugador2.fueServida}
-        turn={turn}
-        reiniciar={() =>
-          reiniciarTurnoPlayer({
-            setEstado: setEstadoJugador2,
-            setTurn,
-          })
-        }
-        total={calcularTotal}
-      />
     </div>
   );
 }

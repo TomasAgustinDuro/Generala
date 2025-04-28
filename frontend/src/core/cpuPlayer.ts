@@ -1,11 +1,10 @@
 import { contarOcurrencias, tirarDados } from "../utils/dados";
 import { todasJugadas } from "../constants/juego";
-import { calcularPuntos} from "../logic/gameLogic";
+import { calcularPuntos } from "../logic/gameLogic";
 import { posiblesJugadas } from "../logic/rules";
-import { PlayPcProps } from "../utils/types";
+import { PlayPcProps, Tablero } from "../utils/types";
 
-
-export const cpuPlayer = ({ tablero, setTablero, setTurn }: PlayPcProps) => {
+export const cpuPlayer = ({ tablero, setTablero, nextTurn }: PlayPcProps) => {
   let mejor = "";
   let dadosTotales: number[] = [];
   let dadosGuardadosPc: number[] = [];
@@ -58,7 +57,6 @@ export const cpuPlayer = ({ tablero, setTablero, setTurn }: PlayPcProps) => {
 
         return puntosActual > puntosMejor ? jugadaActual : mejorActual;
       }, disponibles[0]);
-
     }
   }
 
@@ -80,14 +78,13 @@ export const cpuPlayer = ({ tablero, setTablero, setTurn }: PlayPcProps) => {
     ? 0
     : calcularPuntos(mejor, dadosTotales, fueServidaFinal);
 
-
-  setTablero((prev) => ({
-    ...prev,
+  const newTablero: Tablero = {
+    ...tablero,
     [mejor]: puntosFinales === null ? 0 : puntosFinales,
-  }));
+  };
+  setTablero(newTablero);
 
-  return setTurn('jugador1')
-
+  nextTurn();
 };
 
 const aplicarHeuristica = (

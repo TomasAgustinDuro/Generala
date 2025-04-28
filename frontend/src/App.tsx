@@ -4,6 +4,7 @@ import { StrictMode } from "react";
 import Pc from "./pages/Pc.tsx";
 import Menu from "./pages/menu/Menu.tsx";
 import MultijugadorLocal from "./pages/MultijugadorLocal.tsx";
+import MidMenu from "./pages/MidMenu.tsx";
 
 function App() {
   return (
@@ -11,8 +12,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Menu />} />
-          <Route path="Pc" element={<Pc />} />
-          <Route path="Jugador" element={<MultijugadorLocal />} />
+          <Route path="/menu/:mode" element={<MidMenu />} />
+          <Route path="/Jugador/:quantity" element={<MultijugadorLocal />} />
+          <Route path="/Pc/:quantity" element={<Pc />} />
         </Routes>
       </BrowserRouter>
     </StrictMode>

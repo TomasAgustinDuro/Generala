@@ -1,5 +1,5 @@
 import { contarOcurrencias } from "../utils/dados";
-import { ReiniciarTurnoPlayerProps } from "../utils/types";
+import { ReiniciarTurnoPlayerProps, Tableros } from "../utils/types";
 
 export const calcularPuntos = (
   jugada: string,
@@ -36,24 +36,26 @@ export const calcularTotal = (tablero: Record<string, number | null>) =>
     .filter((v): v is number => v !== null)
     .reduce((acc, curr) => acc + curr, 0);
 
-export const juegoFinalizado = (
-  tablero1: Record<string, number | null>,
-  tablero2: Record<string, number | null>
-) => {
-  if (
-    !Object.values(tablero1).includes(null) &&
-    !Object.values(tablero2).includes(null)
-  ) {
-    const totalTablero1 = calcularTotal(tablero1);
-    const totalTablero2 = calcularTotal(tablero2);
+export const juegoFinalizado = (tableros: Tableros) => {
+  console.log("tableros", tableros);
+  const juegoTerminado = Object.values(tableros).every(
+    (tab) => !Object.values(tab).includes(null)
+  );
 
-    if (totalTablero1 > totalTablero2) {
-      alert("Juego finalizado, el ganador es: el jugador 1");
-    } else if (totalTablero2 > totalTablero1) {
-      alert("Juego finalizado, el ganador es: el jugador 2");
-    } else {
-      alert("Juego finalizado, ¡hay empate!");
-    }
+  if (juegoTerminado) {
+    const puntajes = Object.entries(tableros).map(([id, tablero]) => {
+      const total = Object.values(tablero)
+        .filter((v): v is number => v !== null)
+        .reduce((acc, val) => acc + val, 0);
+
+      return { id, total };
+    });
+
+    const ganador = puntajes.reduce((max, actual) =>
+      actual.total > max.total ? actual : max
+    );
+
+    alert();
 
     setTimeout(() => {
       window.location.reload();
@@ -63,7 +65,7 @@ export const juegoFinalizado = (
 
 export const reiniciarTurnoPlayer = ({
   setEstado,
-  setTurn,
+  nextTurn,
 }: ReiniciarTurnoPlayerProps) => {
   setEstado({
     dados: [],
@@ -72,5 +74,5 @@ export const reiniciarTurnoPlayer = ({
     fueServida: false,
     jugadas: [],
   });
-  setTurn((prevTurn) => (prevTurn === "jugador1" ? "jugador2" : "jugador1"));
+  nextTurn();
 };

@@ -14,8 +14,15 @@ import PlayerBoard from "../components/PlayerBoard.js";
 import PcBoard from "../components/PcBoard.js";
 import { EstadoJugador } from "../utils/types.js";
 import Dado from "../components/Dados.tsx";
+import { useParams } from "react-router-dom";
+import { Tablero } from "../utils/types.js";
+import { createInitialBoardsPC } from "../utils/setupPcPlayer.ts";
 
 function Pc() {
+  const { quantity } = useParams();
+
+  const playerCount = parseInt(quantity || "1", 10);
+
   const [estadoJugador, setEstadoJugador] = useState<EstadoJugador>({
     dados: [],
     dadosGuardados: [],
@@ -24,25 +31,41 @@ function Pc() {
     jugadas: [],
   });
 
-  const [turn, setTurn] = useState<"jugador1" | "jugador2">("jugador1");
-  const [TableroJugador, setTableroJugador] = useState(crearTableroInicial);
-  const [TableroJugadorPc, setTableroJugadorPc] = useState(crearTableroInicial);
+  const [turn, setTurn] = useState<string>("jugador1");
+
+  const [tableros, setTableros] = useState<Record<string, Tablero>>({
+    jugador1: crearTableroInicial(),
+    ...createInitialBoardsPC(playerCount),
+  });
+
+  const ordenTurnos = Object.keys(tableros);
+
+  const nextTurn = (): string => {
+    const currentIndex = ordenTurnos.indexOf(turn);
+    const siguiente = ordenTurnos[(currentIndex + 1) % ordenTurnos.length];
+    setTurn(siguiente);
+    return siguiente;
+  };
 
   useEffect(() => {
-    juegoFinalizado(TableroJugador, TableroJugadorPc);
-  }, [TableroJugador, TableroJugadorPc]);
+    juegoFinalizado(tableros);
+  }, [tableros]);
 
   useEffect(() => {
-    if (turn === "jugador2") {
+    if (turn !== "jugador1" && tableros[turn]) {
       setTimeout(() => {
         cpuPlayer({
-          tablero: TableroJugadorPc,
-          setTablero: setTableroJugadorPc,
-          setTurn,
+          tablero: tableros[turn],
+          setTablero: (nuevoTablero) =>
+            setTableros((prev) => ({
+              ...prev,
+              [turn]: nuevoTablero,
+            })),
+          nextTurn,
         });
       }, 3000);
     }
-  }, [turn]);
+  }, [turn, tableros]);
 
   return (
     <div className={styles.gameContainer}>
@@ -51,16 +74,21 @@ function Pc() {
         todasJugadas={todasJugadas}
         calcularPuntos={calcularPuntos}
         jugadas={estadoJugador.jugadas}
-        setTablero={setTableroJugador}
+        setTablero={(nuevoTablero) =>
+          setTableros((prev) => ({
+            ...prev,
+            jugador1: nuevoTablero,
+          }))
+        }
         handlePlay={() =>
           handlePlay({
             estado: estadoJugador,
             setEstado: setEstadoJugador,
-            tablero: TableroJugador,
+            tablero: tableros.jugador1,
           })
         }
         tiradasRestantes={estadoJugador.tiradasRestantes}
-        tablero={TableroJugador}
+        tablero={tableros.jugador1}
         dadosGuardados={estadoJugador.dadosGuardados}
         dados={estadoJugador.dados}
         fueServida={estadoJugador.fueServida}
@@ -68,7 +96,7 @@ function Pc() {
         reiniciar={() =>
           reiniciarTurnoPlayer({
             setEstado: setEstadoJugador,
-            setTurn,
+            nextTurn,
           })
         }
         total={calcularTotal}
@@ -110,13 +138,19 @@ function Pc() {
         </div>
       </div>
 
-      <PcBoard
-        todasJugadas={todasJugadas}
-        tablero={TableroJugadorPc}
-        total={calcularTotal}
-        turn={turn}
-      />
+      {Object.entries(tableros)
+        .filter(([key]) => key !== "jugador1")
+        .map(([key, value]) => (
+          <PcBoard
+            key={key}
+            tablero={value}
+            todasJugadas={todasJugadas}
+            total={calcularTotal}
+            turn={turn}
+          />
+        ))}
     </div>
   );
 }
+
 export default Pc;
