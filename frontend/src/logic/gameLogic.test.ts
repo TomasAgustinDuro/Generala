@@ -129,6 +129,6 @@ describe("juegoFinalizado", () => {
       },
     });
 
-    expect(resultado).toBe("1");
+    expect(resultado).toEqual("Gana el jugador 2");
   });
 });

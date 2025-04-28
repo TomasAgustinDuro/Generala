@@ -55,7 +55,9 @@ export const juegoFinalizado = (tableros: Tableros) => {
       actual.total > max.total ? actual : max
     );
 
-    alert();
+    alert(
+      `El ganador es el jugador ${ganador.id} con un total de ${ganador.total} puntos!`
+    );
 
     setTimeout(() => {
       window.location.reload();
