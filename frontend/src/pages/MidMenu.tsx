@@ -19,7 +19,7 @@ function MidMenu() {
               vs 3 jugadores
             </Link>
 
-            <Link to={`/${mode}/3`} className={styles.button}>
+            <Link to={`/${mode}/4`} className={styles.button}>
               vs 4 jugadores
             </Link>
           </div>
