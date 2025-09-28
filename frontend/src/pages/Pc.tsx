@@ -43,6 +43,7 @@ function Pc() {
   const nextTurn = (): string => {
     const currentIndex = ordenTurnos.indexOf(turn);
     const siguiente = ordenTurnos[(currentIndex + 1) % ordenTurnos.length];
+    console.log("siguiente", siguiente);
     setTurn(siguiente);
     return siguiente;
   };
@@ -142,6 +143,7 @@ function Pc() {
         .filter(([key]) => key !== "jugador1")
         .map(([key, value]) => (
           <PcBoard
+            jugadorActual={key}
             key={key}
             tablero={value}
             todasJugadas={todasJugadas}

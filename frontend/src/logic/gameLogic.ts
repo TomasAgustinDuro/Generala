@@ -37,7 +37,6 @@ export const calcularTotal = (tablero: Record<string, number | null>) =>
     .reduce((acc, curr) => acc + curr, 0);
 
 export const juegoFinalizado = (tableros: Tableros) => {
-  console.log("tableros", tableros);
   const juegoTerminado = Object.values(tableros).every(
     (tab) => !Object.values(tab).includes(null)
   );
@@ -50,18 +49,21 @@ export const juegoFinalizado = (tableros: Tableros) => {
 
       return { id, total };
     });
+    const maxTotal = Math.max(...puntajes.map((p) => p.total));
+    const ganadores = puntajes.filter((p) => p.total === maxTotal);
 
-    const ganador = puntajes.reduce((max, actual) =>
-      actual.total > max.total ? actual : max
-    );
-
-    alert(
-      `El ganador es el jugador ${ganador.id} con un total de ${ganador.total} puntos!`
-    );
+    if (ganadores.length === 1) {
+      alert(
+        `El ganador es el jugador ${ganadores[0].id} con ${ganadores[0].total} puntos!`
+      );
+    } else {
+      const ids = ganadores.map((g) => g.id).join(", ");
+      alert(`¡Empate entre los jugadores ${ids} con ${maxTotal} puntos!`);
+    }
 
     setTimeout(() => {
       window.location.reload();
-    }, 20000);
+    }, 2000);
   }
 };
 

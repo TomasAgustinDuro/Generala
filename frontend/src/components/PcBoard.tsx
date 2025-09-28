@@ -1,14 +1,18 @@
 import styles from "./board.module.css";
 import { PcBoardProps } from "../utils/types";
 
-function PcBoard({ tablero, todasJugadas, total, turn }: PcBoardProps) {
-  console.log(turn);
-
+function PcBoard({
+  tablero,
+  todasJugadas,
+  total,
+  turn,
+  jugadorActual,
+}: PcBoardProps) {
   return (
     <div className={styles.board}>
       <h3
         style={{
-          backgroundColor: turn == "pc" ? "green" : "transparent",
+          backgroundColor: turn == jugadorActual ? "green" : "transparent",
         }}
       >
         PC

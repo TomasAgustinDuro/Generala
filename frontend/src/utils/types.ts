@@ -32,6 +32,7 @@ export type PcBoardProps = {
   todasJugadas: string[];
   turn: string;
   total: (tablero: Record<string, number | null>) => number;
+  jugadorActual: string;
 };
 
 export type Player = {

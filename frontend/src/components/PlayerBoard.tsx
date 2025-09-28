@@ -74,7 +74,9 @@ function PlayerBoard({
                     : "transparent",
               }}
               onClick={() => {
-                handleSelectCasillero(disponible, jugada, puntos);
+                if (turn === jugadorActual) {
+                  handleSelectCasillero(disponible, jugada, puntos);
+                }
               }}
             >
               <strong>{jugada[0].toUpperCase()}:</strong>{" "}
@@ -84,11 +86,11 @@ function PlayerBoard({
         })}
       </div>
       <p className={styles.total}>Total: {total(tablero)}</p>
-      {jugadorActual != "pc" && (
+      {jugadorActual != "1" && (
         <button
           onClick={() => handlePlay()}
           className={styles.playButton}
-          disabled={tiradasRestantes === 0 || turn === "pc"}
+          disabled={turn !== "jugador1"}
         >
           Lanzar dados
         </button>
