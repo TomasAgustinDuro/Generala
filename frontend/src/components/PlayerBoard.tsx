@@ -10,7 +10,6 @@ function PlayerBoard({
   handlePlay,
   dados,
   turn,
-  tiradasRestantes,
   tablero,
   dadosGuardados,
   reiniciar,
